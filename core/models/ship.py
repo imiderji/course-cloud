@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
-from.shipowner import Shipowner
+from .shipowner import Shipowner
 
 
 class Ship(Base):
