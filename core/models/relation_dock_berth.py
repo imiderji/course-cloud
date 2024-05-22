@@ -5,14 +5,15 @@ from .dock import Dock
 from .berth import Berth
 
 
+
 class RelationDockBerth(Base):
     __tablename__ = "relations_docks_berths"
 
-    dock_id: Mapped[int] = mapped_column(ForeignKey('docks.dock_id'))
-    berth_id: Mapped[int] = mapped_column(ForeignKey('berths.berth_id'))
+    dock_id: Mapped[int] = mapped_column(ForeignKey('docks.id'))
+    berth_id: Mapped[int] = mapped_column(ForeignKey('berths.id'))
 
-    dock: Mapped["Dock"] = relationship("Dock", back_populates="docks")
-    berth: Mapped["Berth"] = relationship("Berth", back_populates="berths")
+    dock: Mapped["Dock"] = relationship("Dock", back_populates="relations_docks_berths")
+    berth: Mapped["Berth"] = relationship("Berth", back_populates="relations_docks_berths")
 
     def __repr__(self) -> str:
         return (

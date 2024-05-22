@@ -1,13 +1,14 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from core.config import settings
 
 
 class DatabaseWork:
-    def __init__(self, url: str) -> None:
-        self.engine = create_async_engine(
-            url=url
+    def __init__(self, url: str):
+        self.engine = create_engine(
+            url=url,
         )
-        self.session_factory = async_sessionmaker(
+        self.session_factory = sessionmaker(
             bind=self.engine,
             autoflush=False,
             autocommit=False,

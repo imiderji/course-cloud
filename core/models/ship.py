@@ -1,22 +1,21 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
-from .shipowner import Shipowner
 
 
 class Ship(Base):
     __tablename__ = "ships"
 
-    ship_id: Mapped[int]
-    ship_name: Mapped[str]
-    ship_class: Mapped[str]
-    ship_num: Mapped[str]
-    ship_capacity: Mapped[int]
-    ship_description: Mapped[str]
-    ship_model: Mapped[str]
-    shipowner_id: Mapped[int] = mapped_column(ForeignKey('shipowners.shipowner_id'))
+    ship_id: Mapped[int] = mapped_column(nullable=True)
+    ship_name: Mapped[str] = mapped_column(nullable=True)
+    ship_class: Mapped[str] = mapped_column(nullable=True)
+    ship_num: Mapped[str] = mapped_column(nullable=True)
+    ship_capacity: Mapped[int] = mapped_column(nullable=True)
+    ship_description: Mapped[str] = mapped_column(nullable=True)
+    ship_model: Mapped[str] = mapped_column(nullable=True)
+    shipowner_id: Mapped[int] = mapped_column(ForeignKey('shipowners.id'))
 
-    shipowner: Mapped["Shipowner"] = relationship("Shipowner", back_populates="ships")
+    shipowner = relationship("Shipowner", back_populates="ships")
 
     def __repr__(self) -> str:
         return (

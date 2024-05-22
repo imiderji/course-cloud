@@ -1,26 +1,25 @@
 import datetime
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 from .base import Base
-from .relation_dock_berth import RelationDockBerth
 
 
 class Dock(Base):
     __tablename__ = "docks"
 
-    dock_id: Mapped[int]
-    dock_name: Mapped[str]
-    berth_count: Mapped[int]
-    dock_address: Mapped[str]
-    dock_type: Mapped[str]
-    exploitation: Mapped[str]
-    department: Mapped[str]
-    work_start_time: Mapped[datetime.time]
-    work_end_time: Mapped[datetime.time]
-    dock_description: Mapped[str]
-    long: Mapped[float]
-    lat: Mapped[float]
+    dock_id: Mapped[int] = mapped_column(nullable=True)
+    dock_name: Mapped[str] = mapped_column(nullable=True)
+    berth_count: Mapped[int] = mapped_column(nullable=True)
+    dock_address: Mapped[str] = mapped_column(nullable=True)
+    dock_type: Mapped[str] = mapped_column(nullable=True)
+    exploitation: Mapped[str] = mapped_column(nullable=True)
+    department: Mapped[str] = mapped_column(nullable=True)
+    work_start_time: Mapped[datetime.time] = mapped_column(nullable=True)
+    work_end_time: Mapped[datetime.time] = mapped_column(nullable=True)
+    dock_description: Mapped[str] = mapped_column(nullable=True)
+    long: Mapped[float] = mapped_column(nullable=True)
+    lat: Mapped[float] = mapped_column(nullable=True)
 
-    relations_docks_berths: Mapped[list["RelationDockBerth"]] = relationship("RelationDockBerth", back_populates="relation_docks_berths")
+    relations_docks_berths = relationship("RelationDockBerth", back_populates="dock")
 
     def __repr__(self) -> str:
         return (

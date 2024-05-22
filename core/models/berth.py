@@ -1,13 +1,15 @@
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 from .base import Base
 
 
 class Berth(Base):
     __tablename__ = "berths"
 
-    berth_id: Mapped[int]
-    berth_name: Mapped[str]
-    berth_letter: Mapped[str]
+    berth_id: Mapped[int] = mapped_column(nullable=True)
+    berth_name: Mapped[str] = mapped_column(nullable=True)
+    berth_letter: Mapped[str] = mapped_column(nullable=True)
+
+    relations_docks_berths = relationship("RelationsDockBerth", back_populates="berth")
 
     def __repr__(self) -> str:
         return (
