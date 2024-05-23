@@ -1,4 +1,6 @@
+import asyncio
 from core.models import Base, db_work
+from bot.bot import bot_poller
 
 
 def init_db():
@@ -7,7 +9,8 @@ def init_db():
 
 
 def main():
-    init_db()
+    # init_db()
+    asyncio.run(bot_poller())
 
 
 if __name__ == "__main__":

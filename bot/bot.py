@@ -1,10 +1,7 @@
-from core.config import settings
-from aiogram import Bot, Dispatcher
+from .commands import commands_router
+from .bot_init import bot, dp
 
 
-bot = Bot(settings.tg_token)
-dp = Dispatcher()
-
-
-async def main():
+async def bot_poller():
+    dp.include_router(commands_router)
     await dp.start_polling(bot)
