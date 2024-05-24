@@ -9,7 +9,7 @@ def init_db():
 
 
 def main():
-    # init_db()
+    init_db()
     asyncio.run(bot_poller())
 
 

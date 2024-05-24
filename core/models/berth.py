@@ -9,7 +9,7 @@ class Berth(Base):
     berth_name: Mapped[str] = mapped_column(nullable=True)
     berth_letter: Mapped[str] = mapped_column(nullable=True)
 
-    relations_docks_berths = relationship("RelationsDockBerth", back_populates="berth")
+    relations_docks_berths = relationship("RelationDockBerth", back_populates="berth")
 
     def __repr__(self) -> str:
         return (

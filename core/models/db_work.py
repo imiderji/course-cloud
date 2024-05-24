@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from core.config import settings
 
 
@@ -14,6 +14,12 @@ class DatabaseWork:
             autocommit=False,
             expire_on_commit=False,
         )
+
+    def get_session(self):
+        session = scoped_session(
+            session_factory=self.session_factory,
+        )
+        return session
 
 
 db_work = DatabaseWork(url=settings.db_url)

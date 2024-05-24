@@ -15,7 +15,3 @@ class Berth(BerthBase):
 
 class BerthCreate(BaseModel):
     pass
-
-
-class BerthUpdate(BerthCreate):
-    pass
