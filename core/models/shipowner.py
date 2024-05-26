@@ -5,7 +5,7 @@ from .base import Base
 class Shipowner(Base):
     __tablename__ = "shipowners"
 
-    shipowner_id: Mapped[int] = mapped_column(nullable=True)
+    shipowner_id: Mapped[int] = mapped_column(nullable=True, unique=True)
     shipowner_name: Mapped[str] = mapped_column(nullable=True)
     shipowner_inn: Mapped[str] = mapped_column(nullable=True)
     shipowner_ogrn: Mapped[str] = mapped_column(nullable=True)

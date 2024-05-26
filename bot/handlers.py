@@ -8,7 +8,8 @@ from api.docks.crud import get_docks, get_dock_columns, create_dock
 from api.docks.schemas import DockCreate
 from api.relations_dock_berth.crud import get_relations_dock_berth, get_relations_dock_berth_columns, create_relation_dock_berth
 from api.relations_dock_berth.schemas import RelationDockBerthCreate
-from api.ships.crud import get_ships, get_ships_columns
+from api.ships.crud import get_ships, get_ships_columns, create_ship
+from api.ships.schemas import ShipCreate
 from api.shipowners.crud import get_shipowners, get_shipowners_columns, create_shipowner
 from api.shipowners.schemas import ShipownerCreate
 
@@ -99,8 +100,24 @@ async def handle_excel(message: Message):
                         "berth_id": row["berth_id"] if not pd.isna(row["berth_id"]) else None,
                     }
 
-                    relation_dock_berth_in= RelationDockBerthCreate(**relation_dock_berth_data)
+                    relation_dock_berth_in = RelationDockBerthCreate(**relation_dock_berth_data)
                     _ = create_relation_dock_berth(db_work.get_session(), relation_dock_berth_in)
+
+            case "ships":
+                for _, row in df.iterrows():
+                    ships_data = {
+                        "ship_id": row["ship_id"] if not pd.isna(row["ship_id"]) else None,
+                        "ship_name": row["ship_name"] if not pd.isna(row["ship_name"]) else None,
+                        "ship_class": row["ship_class"] if not pd.isna(row["ship_class"]) else None,
+                        "ship_num": row["ship_num"] if not pd.isna(row["ship_num"]) else None,
+                        "ship_capacity": row["ship_capacity"] if not pd.isna(row["ship_capacity"]) else None,
+                        "ship_description": row["ship_description"] if not pd.isna(row["ship_description"]) else None,
+                        "ship_model": row["ship_model"] if not pd.isna(row["ship_model"]) else None,
+                        "shipowner_id": row["shipowner_id"] if not pd.isna(row["shipowner_id"]) else None,
+                    }
+
+                    ship_in = ShipCreate(**ships_data)
+                    _ = create_ship(db_work.get_session(), ship_in)
 
             case "shipowners":
                 for _, row in df.iterrows():
