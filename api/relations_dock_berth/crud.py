@@ -15,8 +15,8 @@ def get_relations_dock_berth(session: Session) -> list[RelationDockBerth]:
 def get_relations_dock_berth_columns() -> list[str]:
     return RelationDockBerth.__table__.columns.keys()
 
-def create_dock(session: Session, relation_dock_berth_in: RelationDockBerthCreate) -> RelationDockBerth:
-    RelationDockBerth = RelationDockBerth(**relation_dock_berth_in.model_dump())
-    session.add(RelationDockBerth)
+def create_relation_dock_berth(session: Session, relation_dock_berth_in: RelationDockBerthCreate) -> RelationDockBerth:
+    relation_dock_berth = RelationDockBerth(**relation_dock_berth_in.model_dump())
+    session.add(relation_dock_berth)
     session.commit()
-    return RelationDockBerth
+    return relation_dock_berth

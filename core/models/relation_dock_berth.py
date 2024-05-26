@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 from .dock import Dock
@@ -9,8 +9,8 @@ from .berth import Berth
 class RelationDockBerth(Base):
     __tablename__ = "relations_docks_berths"
 
-    dock_id: Mapped[int] = mapped_column(ForeignKey('docks.id'))
-    berth_id: Mapped[int] = mapped_column(ForeignKey('berths.id'))
+    dock_id: Mapped[int] = mapped_column(ForeignKey('docks.dock_id'))
+    berth_id: Mapped[int] = mapped_column(ForeignKey('berths.berth_id'))
 
     dock: Mapped["Dock"] = relationship("Dock", back_populates="relations_docks_berths")
     berth: Mapped["Berth"] = relationship("Berth", back_populates="relations_docks_berths")

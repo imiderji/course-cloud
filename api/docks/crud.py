@@ -16,7 +16,7 @@ def get_dock_columns() -> list[str]:
     return Dock.__table__.columns.keys()
 
 def create_dock(session: Session, dock_in: DockCreate) -> Dock:
-    Dock = Dock(**dock_in.model_dump())
-    session.add(Dock)
+    dock = Dock(**dock_in.model_dump())
+    session.add(dock)
     session.commit()
-    return Dock
+    return dock

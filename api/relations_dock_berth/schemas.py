@@ -1,8 +1,9 @@
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 class RelationDockBerthBase(BaseModel):
-    dock_id: int
-    berth_id: int 
+    dock_id: Optional[int]
+    berth_id: Optional[int] 
 
 
 class RelationDockBerth(RelationDockBerthBase):
@@ -11,5 +12,5 @@ class RelationDockBerth(RelationDockBerthBase):
     id: int
 
 
-class RelationDockBerthCreate(BaseModel):
+class RelationDockBerthCreate(RelationDockBerthBase):
     pass

@@ -1,19 +1,20 @@
 from pydantic import BaseModel, ConfigDict
-import datetime
+from typing import Optional
+from datetime import time
 
 class DockBase(BaseModel):
-    dock_id: int
-    dock_name: str
-    berth_count: int
-    dock_address: str
-    dock_type: str
-    exploitation: str
-    department: str
-    work_start_time: datetime.time
-    work_end_time: datetime.time
-    dock_description: str
-    long: float
-    lat: float
+    dock_id: Optional[int]
+    dock_name: Optional[str]
+    berth_count: Optional[int]
+    dock_address: Optional[str]
+    dock_type: Optional[str]
+    exploitation: Optional[str]
+    department: Optional[str]
+    work_start_time: Optional[time]
+    work_end_time: Optional[time]
+    dock_description: Optional[str]
+    long: Optional[float]
+    lat: Optional[float]
 
 
 class Dock(DockBase):
@@ -22,5 +23,5 @@ class Dock(DockBase):
     id: int
 
 
-class DockCreate(BaseModel):
+class DockCreate(DockBase):
     pass
