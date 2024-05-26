@@ -9,7 +9,8 @@ from api.docks.schemas import DockCreate
 from api.relations_dock_berth.crud import get_relations_dock_berth, get_relations_dock_berth_columns, create_relation_dock_berth
 from api.relations_dock_berth.schemas import RelationDockBerthCreate
 from api.ships.crud import get_ships, get_ships_columns
-from api.shipowners.crud import get_shipowners, get_shipowners_columns
+from api.shipowners.crud import get_shipowners, get_shipowners_columns, create_shipowner
+from api.shipowners.schemas import ShipownerCreate
 
 from core.models.db_work import db_work
 from aiogram.types import FSInputFile
@@ -100,6 +101,22 @@ async def handle_excel(message: Message):
 
                     relation_dock_berth_in= RelationDockBerthCreate(**relation_dock_berth_data)
                     _ = create_relation_dock_berth(db_work.get_session(), relation_dock_berth_in)
+
+            case "shipowners":
+                for _, row in df.iterrows():
+                    shipowner_data = {
+                        "shipowner_id": row["shipowner_id"] if not pd.isna(row["shipowner_id"]) else None,
+                        "shipowner_name": row["shipowner_name"] if not pd.isna(row["shipowner_name"]) else None,
+                        "shipowner_inn": str(int(row["shipowner_inn"])) if not pd.isna(row["shipowner_inn"]) else None,
+                        "shipowner_ogrn": str(int(row["shipowner_ogrn"])) if not pd.isna(row["shipowner_ogrn"]) else None,
+                        "shipowner_contacts": row["shipowner_contacts"] if not pd.isna(row["shipowner_contacts"]) else None,
+                        "shipowner_url": row["shipowner_url"] if not pd.isna(row["shipowner_url"]) else None,
+                    }
+
+                    shipowner_in= ShipownerCreate(**shipowner_data)
+                    _ = create_shipowner(db_work.get_session(), shipowner_in)
+            case _:
+                await message.answer("Файл начинаться с названия таблицы")
 
 
                 

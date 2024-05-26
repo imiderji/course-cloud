@@ -7,8 +7,8 @@ class Shipowner(Base):
 
     shipowner_id: Mapped[int] = mapped_column(nullable=True)
     shipowner_name: Mapped[str] = mapped_column(nullable=True)
-    shipowner_inn: Mapped[int] = mapped_column(nullable=True)
-    shipowner_ogrn: Mapped[int] = mapped_column(nullable=True)
+    shipowner_inn: Mapped[str] = mapped_column(nullable=True)
+    shipowner_ogrn: Mapped[str] = mapped_column(nullable=True)
     shipowner_contacts: Mapped[str] = mapped_column(nullable=True)
     shipowner_url: Mapped[str] = mapped_column(nullable=True)
 
