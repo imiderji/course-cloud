@@ -1,10 +1,13 @@
 from aiogram import F, Router
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ContentType
 from aiogram import Router
 
-from api.berths.crud import get_berths, get_berth_columns
-from api.docks.crud import get_docks, get_dock_columns
-from api.relations_dock_berth.crud import get_relations_dock_berth, get_relations_dock_berth_columns
+from api.berths.crud import get_berths, get_berth_columns, create_berth
+from api.berths.schemas import BerthCreate
+from api.docks.crud import get_docks, get_dock_columns, create_dock
+from api.docks.schemas import DockCreate
+from api.relations_dock_berth.crud import get_relations_dock_berth, get_relations_dock_berth_columns, create_relation_dock_berth
+from api.relations_dock_berth.schemas import RelationDockBerthCreate
 from api.ships.crud import get_ships, get_ships_columns
 from api.shipowners.crud import get_shipowners, get_shipowners_columns
 
@@ -14,6 +17,11 @@ from openpyxl import Workbook
 from .messages import messages
 from . import keyboards as kb
 import os
+from io import BytesIO
+
+import pandas as pd
+
+from .bot_init import bot
 
 
 handlers_router = Router()
@@ -41,6 +49,69 @@ async def tutorial(message: Message):
     await message.answer("🌊", reply_markup=kb.in_tables_menu)
 
 
+# Добавление документа
+
+@handlers_router.message(F.content_type == ContentType.DOCUMENT)
+async def handle_excel(message: Message):
+    if message.document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        await bot.download(message.document.file_id,message.document.file_name)
+
+        file_path = message.document.file_name
+        file_name = message.document.file_name.split(".")[0]
+
+        df = pd.read_excel(file_path)
+
+        match file_name:
+            case "berths":
+                for _, row in df.iterrows():
+                    berth_data = {
+                        "berth_id": row["berth_id"] if not pd.isna(row["berth_id"]) else None,
+                        "berth_number": row["berth_number"] if not pd.isna(row["berth_number"]) else None,
+                        "berth_letter": row["berth_letter"] if not pd.isna(row["berth_letter"]) else None,
+                    }
+
+                    berth_in = BerthCreate(**berth_data)
+                    _ = create_berth(db_work.get_session(), berth_in)
+            case "docks":
+                for _, row in df.iterrows():
+                    dock_data = {
+                        "dock_id": row["dock_id"] if not pd.isna(row["dock_id"]) else None,
+                        "dock_name": row["dock_name"] if not pd.isna(row["dock_name"]) else None,
+                        "berth_count": row["berth_count"] if not pd.isna(row["berth_count"]) else None,
+                        "dock_address": row["dock_address"] if not pd.isna(row["dock_address"]) else None,
+                        "dock_type": row["dock_type"] if not pd.isna(row["dock_type"]) else None,
+                        "exploitation": row["exploitation"] if not pd.isna(row["exploitation"]) else None,
+                        "department": row["department"] if not pd.isna(row["department"]) else None,
+                        "work_start_time": row["work_start_time"] if not pd.isna(row["work_start_time"]) else None,
+                        "work_end_time": row["work_end_time"] if not pd.isna(row["work_end_time"]) else None,
+                        "dock_description": row["dock_description"] if not pd.isna(row["dock_description"]) else None,
+                        "long": row["long"] if not pd.isna(row["long"]) else None,
+                        "lat": row["lat"] if not pd.isna(row["lat"]) else None,
+                    }
+
+                    dock_in = DockCreate(**dock_data)
+                    _ = create_dock(db_work.get_session(), dock_in)
+            case "relations_dock_berth":
+                for _, row in df.iterrows():
+                    relation_dock_berth_data = {
+                        "dock_id": row["dock_id"] if not pd.isna(row["dock_id"]) else None,
+                        "berth_id": row["berth_id"] if not pd.isna(row["berth_id"]) else None,
+                    }
+
+                    relation_dock_berth_in= RelationDockBerthCreate(**relation_dock_berth_data)
+                    _ = create_relation_dock_berth(db_work.get_session(), relation_dock_berth_in)
+
+
+                
+
+
+        os.remove(file_path)
+
+        await message.answer(f"Файл {message.document.file_name} успешно загружен и обработан!")
+    else:
+        await message.answer("Пожалуйста, отправьте файл в формате Excel.")
+
+
 # BERTHS ПРИЧАЛЫ
 
 
@@ -53,7 +124,7 @@ async def berths(callback: Message):
 
 @handlers_router.callback_query(F.data == 'add_berths')
 async def add_berths_handler(callback: Message):
-    await callback.message.answer(f"Внесите файл с данными в формате json 👇🏻", reply_markup=kb.in_table_actions)
+    await callback.message.answer(f"Внесите файл с данными в формате Excel 👇🏻", reply_markup=kb.in_table_actions)
 
 
 @handlers_router.callback_query(F.data == 'get_berths')
@@ -67,7 +138,7 @@ async def get_berths_handler(callback: Message):
     ws.append(colums)
 
     for berth in berths_list:
-        ws.append([berth.berth_id, berth.berth_name, berth.berth_letter])
+        ws.append([berth.berth_id, berth.berth_number, berth.berth_letter])
 
     file_path = "berths.xlsx"
     wb.save(file_path)
@@ -90,7 +161,7 @@ async def docks(callback: Message):
 
 @handlers_router.callback_query(F.data == 'add_docks')
 async def add_docks_handler(callback: Message):
-    await callback.message.answer(f"Внесите файл с данными в формате json 👇🏻", reply_markup=kb.in_table_actions)
+    await callback.message.answer(f"Внесите файл с данными в формате Excel 👇🏻", reply_markup=kb.in_table_actions)
 
 
 @handlers_router.callback_query(F.data == 'get_docks')
@@ -104,7 +175,7 @@ async def get_docks_handler(callback: Message):
     ws.append(colums)
 
     for dock in docks_list:
-        ws.append([dock.dock_id, dock.dock_name, dock.dock_count, 
+        ws.append([dock.dock_id, dock.dock_name, dock.berth_count, 
                    dock.dock_address, dock.dock_type, dock.exploitation, 
                    dock.department, dock.work_start_time, dock.work_end_time, 
                    dock.dock_description, dock.long, dock.lat])
@@ -130,7 +201,7 @@ async def relations_dock_berth(callback: Message):
 
 @handlers_router.callback_query(F.data == 'add_relations_dock_berth')
 async def add_relations_dock_berth_handler(callback: Message):
-    await callback.message.answer(f"Внесите файл с данными в формате json 👇🏻", reply_markup=kb.in_table_actions)
+    await callback.message.answer(f"Внесите файл с данными в формате Excel 👇🏻", reply_markup=kb.in_table_actions)
 
 
 @handlers_router.callback_query(F.data == 'get_relations_dock_berth')
@@ -167,7 +238,7 @@ async def ships(callback: Message):
 
 @handlers_router.callback_query(F.data == 'add_ships')
 async def add_ships_handler(callback: Message):
-    await callback.message.answer(f"Внесите файл с данными в формате json 👇🏻", reply_markup=kb.in_table_actions)
+    await callback.message.answer(f"Внесите файл с данными в формате Excel 👇🏻", reply_markup=kb.in_table_actions)
 
 
 @handlers_router.callback_query(F.data == 'get_ships')
@@ -206,7 +277,7 @@ async def shipowners(callback: Message):
 
 @handlers_router.callback_query(F.data == 'add_shipowners')
 async def add_shipowners_handler(callback: Message):
-    await callback.message.answer(f"Внесите файл с данными в формате json 👇🏻", reply_markup=kb.in_table_actions)
+    await callback.message.answer(f"Внесите файл с данными в формате Excel 👇🏻", reply_markup=kb.in_table_actions)
 
 
 @handlers_router.callback_query(F.data == 'get_shipowners')

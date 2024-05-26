@@ -6,7 +6,7 @@ from .base import Base
 class Dock(Base):
     __tablename__ = "docks"
 
-    dock_id: Mapped[int] = mapped_column(nullable=True)
+    dock_id: Mapped[int] = mapped_column(nullable=True, unique=True)
     dock_name: Mapped[str] = mapped_column(nullable=True)
     berth_count: Mapped[int] = mapped_column(nullable=True)
     dock_address: Mapped[str] = mapped_column(nullable=True)

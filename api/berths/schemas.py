@@ -1,10 +1,11 @@
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 
 class BerthBase(BaseModel):
-    berth_id: int
-    berth_name: str
-    berth_letter: str
+    berth_id: Optional[int]
+    berth_number: Optional[int]
+    berth_letter: Optional[str]
 
 
 class Berth(BerthBase):
@@ -13,5 +14,5 @@ class Berth(BerthBase):
     id: int
 
 
-class BerthCreate(BaseModel):
+class BerthCreate(BerthBase):
     pass

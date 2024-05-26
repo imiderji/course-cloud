@@ -12,10 +12,12 @@ def get_ships(session: Session) -> list[Ship]:
     ships = result.scalars().all()
     return ships
 
+
 def get_ships_columns() -> list[str]:
     return Ship.__table__.columns.keys()
 
-def create_dock(session: Session, ships_in: ShipCreate) -> Ship:
+
+def create_ship(session: Session, ships_in: ShipCreate) -> Ship:
     Ship = Ship(**ships_in.model_dump())
     session.add(Ship)
     session.commit()
