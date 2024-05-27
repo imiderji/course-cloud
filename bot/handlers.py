@@ -6,6 +6,12 @@ from api.berths.crud import get_berths, get_berth_columns, create_berth
 from api.berths.schemas import BerthCreate
 from api.docks.crud import get_docks, get_dock_columns, create_dock
 from api.docks.schemas import DockCreate
+from api.routes.schemas import RouteCreate
+from api.routes.crud import get_routes, get_route_columns, create_route
+from api.lots.schemas import LotCreate
+from api.lots.crud import get_lots, get_lot_columns, create_lot
+from api.trips.schemas import TripCreate
+from api.trips.crud import get_trips, get_trip_columns, create_trip
 from api.relations_dock_berth.crud import get_relations_dock_berth, get_relations_dock_berth_columns, create_relation_dock_berth
 from api.relations_dock_berth.schemas import RelationDockBerthCreate
 from api.ships.crud import get_ships, get_ships_columns
@@ -99,10 +105,39 @@ async def handle_excel(message: Message):
                     }
 
                     relation_dock_berth_in= RelationDockBerthCreate(**relation_dock_berth_data)
-                    _ = create_relation_dock_berth(db_work.get_session(), relation_dock_berth_in)
-
-
-                
+                    _ = create_relation_dock_berth(db_work.get_session(), relation_dock_berth_in)   
+            case "routes":
+                for _, row in df.iterrows():
+                    route_data = {
+                        "route_name": row["route_name"] if not pd.isna(row["route_name"]) else None,
+                        "route_short_name": row["route_short_name"] if not pd.isna(row["route_short_name"]) else None,
+                        "route_active": row["route_active"] if not pd.isna(row["route_active"]) else None,
+                        "route_type_id": row["route_type_id"] if not pd.isna(row["route_type_id"]) else None,
+                        "route_type_name": row["route_type_name"] if not pd.isna(row["route_type_name"]) else None,
+                        "route_travel_time": row["route_travel_time"] if not pd.isna(row["route_travel_time"]) else None,
+                        "route_color": row["route_color"] if not pd.isna(row["route_color"]) else None,
+                    }
+                    route_in = RouteCreate(**route_data)
+                    _ = create_route(db_work.get_session(), route_in)
+            case "lots":
+                for _, row in df.iterrows():
+                    lot_data = {
+                        "route_id": row["route_id"] if not pd.isna(row["route_id"]) else None,
+                        "lot_name": row["lot_name"] if not pd.isna(row["lot_name"]) else None,
+                        "lot_active": row["lot_active"] if not pd.isna(row["lot_active"]) else None,
+                    }
+                    lot_in = LotCreate(**lot_data)
+                    _ = create_lot(db_work.get_session(), lot_in)
+            case "trips":
+                for _, row in df.iterrows():
+                    trip_data = {
+                        "lot_id": row["lot_id"] if not pd.isna(row["lot_id"]) else None,
+                        "route_id": row["route_id"] if not pd.isna(row["route_id"]) else None,
+                        "trip_name": row["trip_name"] if not pd.isna(row["trip_name"]) else None,
+                        "trip_active": row["trip_active"] if not pd.isna(row["trip_active"]) else None,
+                    }
+                    trip_in = TripCreate(**trip_data)
+                    _ = create_trip(db_work.get_session(), trip_in)
 
 
         os.remove(file_path)
