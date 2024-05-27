@@ -1,0 +1,32 @@
+docker build -t makochetkovshad/course-cloud .
+
+docker login --username имя --password пароль
+
+docker push makochetkovshad/course-cloud:latest
+
+
+
+Yandex Container Registry
+
+yc init
+
+yc container registry create --name название_реестра
+
+yc container registry configure-docker
+
+docker login
+
+docker pull course-cloud:latest
+
+docker tag course-cloud cr.yandex/crpu5fgf5s73tvkike6a/course-cloud:latest
+
+docker push cr.yandex/crpu5fgf5s73tvkike6a/course-cloud:latest
+
+
+Запуск образа на виртуальной машине
+
+yc compute ssh --name course-serf --folder-id b1gj0jr6hs7qs7oujaga
+
+docker pull cr.yandex/crpu5fgf5s73tvkike6a/course-cloud:latest
+
+docker run cr.yandex/crpu5fgf5s73tvkike6a/course-cloud:latest

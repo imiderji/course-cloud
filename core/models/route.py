@@ -2,8 +2,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
 class Route(Base):
-    __tablename__ = "route"
+    __tablename__ = "routes"
 
+    route_id: Mapped[int] = mapped_column(nullable=True, unique=True)
     route_name: Mapped[str] = mapped_column(nullable=True)
     route_short_name: Mapped[str] = mapped_column(nullable=True)
     route_active: Mapped[bool] = mapped_column(nullable=True)
@@ -18,6 +19,7 @@ class Route(Base):
     def __repr__(self) -> str:
         return (
             f"Route("
+            f"route_id={self.route_id!r}, "
             f"route_name={self.route_name!r}, "
             f"route_short_name={self.route_short_name!r}, "
             f"route_active={self.route_active!r}, "

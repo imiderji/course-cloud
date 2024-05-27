@@ -3,10 +3,11 @@ from .base import Base
 from sqlalchemy import ForeignKey
 
 class Trip(Base):
-    __tablename__ = "trip"
+    __tablename__ = "trips"
 
-    lot_id: Mapped[int] = mapped_column(ForeignKey('lot.id'))
-    route_id: Mapped[int] = mapped_column(ForeignKey('route.id'))
+    trip_id: Mapped[int] = mapped_column(nullable=True, unique=True)
+    lot_id: Mapped[int] = mapped_column(ForeignKey('lots.lot_id'))
+    route_id: Mapped[int] = mapped_column(ForeignKey('routes.route_id'))
     trip_name: Mapped[str] = mapped_column(nullable=True)
     trip_active: Mapped[bool] = mapped_column(nullable=True)
 
@@ -16,6 +17,7 @@ class Trip(Base):
     def __repr__(self) -> str:
         return (
             f"Trip("
+            f"trip_id={self.trip_id!r}, "
             f"lot_id={self.lot_id!r}, "
             f"route_id={self.route_id!r}, "
             f"trip_name={self.trip_name!r}, "

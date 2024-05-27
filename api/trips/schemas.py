@@ -2,6 +2,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
 class TripBase(BaseModel):
+    trip_id: Optional[int]
     lot_id: Optional[int]
     route_id: Optional[int]
     trip_name: Optional[str]

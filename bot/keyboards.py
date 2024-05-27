@@ -30,6 +30,9 @@ tables = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="relations_dock_berth (Привязка причалов к докам)", callback_data='relations_dock_berth')],
     [InlineKeyboardButton(text="ships (Судна)", callback_data='ships')],
     [InlineKeyboardButton(text="shipowners (Владельцы суден)", callback_data='shipowners')],
+    [InlineKeyboardButton(text="routes (Маршруты)", callback_data='routes')],
+    [InlineKeyboardButton(text="lots (Лоты)", callback_data='lots')],
+    [InlineKeyboardButton(text="trips (Поездки)", callback_data='trips')],
 ])
 
 berths_actions = InlineKeyboardMarkup(inline_keyboard=[
@@ -55,6 +58,21 @@ ships_actions = InlineKeyboardMarkup(inline_keyboard=[
 shipowners_actions = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Добавить данные", callback_data='add_shipowners')],
     [InlineKeyboardButton(text="Получить таблицу", callback_data='get_shipowners')],
+])
+
+routes_actions = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="Добавить данные", callback_data='add_routes')],
+    [InlineKeyboardButton(text="Получить таблицу", callback_data='get_routes')],
+])
+
+lots_actions = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="Добавить данные", callback_data='add_lots')],
+    [InlineKeyboardButton(text="Получить таблицу", callback_data='get_lots')],
+])
+
+trips_actions = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="Добавить данные", callback_data='add_trips')],
+    [InlineKeyboardButton(text="Получить таблицу", callback_data='get_trips')],
 ])
 
 

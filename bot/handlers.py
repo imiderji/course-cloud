@@ -111,6 +111,7 @@ async def handle_excel(message: Message):
             case "routes":
                 for _, row in df.iterrows():
                     route_data = {
+                        "route_id": row["route_id"] if not pd.isna(row["route_id"]) else None,
                         "route_name": row["route_name"] if not pd.isna(row["route_name"]) else None,
                         "route_short_name": row["route_short_name"] if not pd.isna(row["route_short_name"]) else None,
                         "route_active": row["route_active"] if not pd.isna(row["route_active"]) else None,
@@ -124,6 +125,7 @@ async def handle_excel(message: Message):
             case "lots":
                 for _, row in df.iterrows():
                     lot_data = {
+                        "lot_id": row["lot_id"] if not pd.isna(row["lot_id"]) else None,
                         "route_id": row["route_id"] if not pd.isna(row["route_id"]) else None,
                         "lot_name": row["lot_name"] if not pd.isna(row["lot_name"]) else None,
                         "lot_active": row["lot_active"] if not pd.isna(row["lot_active"]) else None,
@@ -133,6 +135,7 @@ async def handle_excel(message: Message):
             case "trips":
                 for _, row in df.iterrows():
                     trip_data = {
+                        "trip_id": row["trip_id"] if not pd.isna(row["trip_id"]) else None,
                         "lot_id": row["lot_id"] if not pd.isna(row["lot_id"]) else None,
                         "route_id": row["route_id"] if not pd.isna(row["route_id"]) else None,
                         "trip_name": row["trip_name"] if not pd.isna(row["trip_name"]) else None,
@@ -140,8 +143,6 @@ async def handle_excel(message: Message):
                     }
                     trip_in = TripCreate(**trip_data)
                     _ = create_trip(db_work.get_session(), trip_in)
-                    relation_dock_berth_in = RelationDockBerthCreate(**relation_dock_berth_data)
-                    _ = create_relation_dock_berth(db_work.get_session(), relation_dock_berth_in)
 
             case "ships":
                 for _, row in df.iterrows():
@@ -176,7 +177,6 @@ async def handle_excel(message: Message):
                 await message.answer("Файл начинаться с названия таблицы")
 
 
-                
 
 
         os.remove(file_path)
