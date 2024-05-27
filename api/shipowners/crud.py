@@ -16,7 +16,7 @@ def get_shipowners_columns() -> list[str]:
     return Shipowner.__table__.columns.keys()
 
 def create_shipowner(session: Session, shipowners_in: ShipownerCreate) -> Shipowner:
-    Shipowner = Shipowner(**shipowners_in.model_dump())
-    session.add(Shipowner)
+    shipowner = Shipowner(**shipowners_in.model_dump())
+    session.add(shipowner)
     session.commit()
-    return Shipowner
+    return shipowner

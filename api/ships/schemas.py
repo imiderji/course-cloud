@@ -1,14 +1,15 @@
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 class ShipBase(BaseModel):
-    ship_id: int
-    ship_name: str
-    ship_class: str
-    ship_num: str
-    ship_capacity: int
-    ship_description: str
-    ship_model: str
-    shipowner_id: int
+    ship_id: Optional[int]
+    ship_name: Optional[str]
+    ship_class: Optional[str]
+    ship_num: Optional[str]
+    ship_capacity: Optional[int]
+    ship_description: Optional[str]
+    ship_model: Optional[str]
+    shipowner_id: Optional[int]
 
 
 class Ship(ShipBase):
@@ -17,5 +18,5 @@ class Ship(ShipBase):
     id: int
 
 
-class ShipCreate(BaseModel):
+class ShipCreate(ShipBase):
     pass

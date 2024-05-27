@@ -13,7 +13,7 @@ class Ship(Base):
     ship_capacity: Mapped[int] = mapped_column(nullable=True)
     ship_description: Mapped[str] = mapped_column(nullable=True)
     ship_model: Mapped[str] = mapped_column(nullable=True)
-    shipowner_id: Mapped[int] = mapped_column(ForeignKey('shipowners.id'))
+    shipowner_id: Mapped[int] = mapped_column(ForeignKey('shipowners.shipowner_id'))
 
     shipowner = relationship("Shipowner", back_populates="ships")
 

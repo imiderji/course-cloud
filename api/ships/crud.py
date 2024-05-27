@@ -18,7 +18,7 @@ def get_ships_columns() -> list[str]:
 
 
 def create_ship(session: Session, ships_in: ShipCreate) -> Ship:
-    Ship = Ship(**ships_in.model_dump())
-    session.add(Ship)
+    ship = Ship(**ships_in.model_dump())
+    session.add(ship)
     session.commit()
-    return Ship
+    return ship
