@@ -1,5 +1,5 @@
 from aiogram import F, Router
-from aiogram.types import Message, CallbackQuery, ContentType
+from aiogram.types import Message, ContentType
 from aiogram import Router
 
 from api.berths.crud import get_berths, get_berth_columns, create_berth
