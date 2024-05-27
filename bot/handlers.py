@@ -106,7 +106,6 @@ async def handle_excel(message: Message):
                         "berth_id": row["berth_id"] if not pd.isna(row["berth_id"]) else None,
                     }
 
-<<<<<<< HEAD
                     relation_dock_berth_in= RelationDockBerthCreate(**relation_dock_berth_data)
                     _ = create_relation_dock_berth(db_work.get_session(), relation_dock_berth_in)   
             case "routes":
@@ -141,7 +140,6 @@ async def handle_excel(message: Message):
                     }
                     trip_in = TripCreate(**trip_data)
                     _ = create_trip(db_work.get_session(), trip_in)
-=======
                     relation_dock_berth_in = RelationDockBerthCreate(**relation_dock_berth_data)
                     _ = create_relation_dock_berth(db_work.get_session(), relation_dock_berth_in)
 
@@ -179,7 +177,6 @@ async def handle_excel(message: Message):
 
 
                 
->>>>>>> ad635c01965cae845829891d26ebf58d676a8677
 
 
         os.remove(file_path)
@@ -376,5 +373,111 @@ async def get_shipowners_handler(callback: Message):
     wb.save(file_path)
 
     await callback.message.answer_document(FSInputFile(file_path), caption="Файл с данными о владельцах суден", reply_markup=kb.in_table_actions)
+
+    os.remove(file_path)
+
+# ROUTES МАРШРУТЫ
+
+@handlers_router.callback_query(F.data == 'routes')
+async def routes(callback: Message):
+    await callback.message.delete()
+    await callback.message.answer(f"Таблица routes (Маршруты)\n\nВыберите действие 👇🏻", reply_markup=kb.routes_actions)
+    await callback.message.answer(f"⚓", reply_markup=kb.in_table_actions)
+
+
+@handlers_router.callback_query(F.data == 'add_routes')
+async def add_routes_handler(callback: Message):
+    await callback.message.answer(f"Внесите файл с данными в формате Excel 👇🏻", reply_markup=kb.in_table_actions)
+
+
+@handlers_router.callback_query(F.data == 'get_routes')
+async def get_routes_handler(callback: Message):
+
+    routes_list = get_routes(db_work.get_session())
+    wb = Workbook()
+    ws = wb.active
+
+    colums = get_route_columns()[:len(get_route_columns()) - 1]
+    ws.append(colums)
+
+    for route in routes_list:
+        ws.append([route.route_name, route.route_short_name, route.route_active, 
+                   route.route_type_id, route.route_type_name, route.route_travel_time, 
+                   route.route_color])
+
+    file_path = "routes.xlsx"
+    wb.save(file_path)
+
+    await callback.message.answer_document(FSInputFile(file_path), caption="Файл с данными о маршрутах", reply_markup=kb.in_table_actions)
+
+    os.remove(file_path)
+
+
+# LOTS ЛОТЫ
+
+@handlers_router.callback_query(F.data == 'lots')
+async def lots(callback: Message):
+    await callback.message.delete()
+    await callback.message.answer(f"Таблица lots (Лоты)\n\nВыберите действие 👇🏻", reply_markup=kb.lots_actions)
+    await callback.message.answer(f"⚓", reply_markup=kb.in_table_actions)
+
+
+@handlers_router.callback_query(F.data == 'add_lots')
+async def add_lots_handler(callback: Message):
+    await callback.message.answer(f"Внесите файл с данными в формате Excel 👇🏻", reply_markup=kb.in_table_actions)
+
+
+@handlers_router.callback_query(F.data == 'get_lots')
+async def get_lots_handler(callback: Message):
+
+    lots_list = get_lots(db_work.get_session())
+    wb = Workbook()
+    ws = wb.active
+
+    colums = get_lot_columns()[:len(get_lot_columns()) - 1]
+    ws.append(colums)
+
+    for lot in lots_list:
+        ws.append([lot.id, lot.route_id, lot.lot_name, lot.lot_active])
+
+    file_path = "lots.xlsx"
+    wb.save(file_path)
+
+    await callback.message.answer_document(FSInputFile(file_path), caption="Файл с данными о лотах", reply_markup=kb.in_table_actions)
+
+    os.remove(file_path)
+
+
+# TRIPS ПОЕЗДКИ
+
+@handlers_router.callback_query(F.data == 'trips')
+async def trips(callback: Message):
+    await callback.message.delete()
+    await callback.message.answer(f"Таблица trips (Поездки)\n\nВыберите действие 👇🏻", reply_markup=kb.trips_actions)
+    await callback.message.answer(f"⚓", reply_markup=kb.in_table_actions)
+
+
+@handlers_router.callback_query(F.data == 'add_trips')
+async def add_trips_handler(callback: Message):
+    await callback.message.answer(f"Внесите файл с данными в формате Excel 👇🏻", reply_markup=kb.in_table_actions)
+
+
+@handlers_router.callback_query(F.data == 'get_trips')
+async def get_trips_handler(callback: Message):
+
+    trips_list = get_trips(db_work.get_session())
+    wb = Workbook()
+    ws = wb.active
+
+    colums = get_trip_columns()[:len(get_trip_columns()) - 1]
+    ws.append(colums)
+
+    for trip in trips_list:
+        ws.append([trip.lot_id, trip.route_id, trip.trip_name, trip.trip_active])
+
+    file_path = "trips.xlsx"
+    wb.save(file_path)
+
+    await callback.message.answer_document(FSInputFile(file_path), caption="Файл с данными о поездках", reply_markup=kb.in_table_actions)
 
     os.remove(file_path)
